@@ -93,6 +93,20 @@ public class ELF32 {
         public byte[] p_memsz = new byte[4];
         public byte[] p_flags = new byte[4];//有多个不同的值
         public byte[] p_align = new byte[4];
+
+        @Override
+        public String toString() {
+            return "elf32_phdr{" +
+                    "p_type=" + Utils.byte2HexStringReverse(p_type) +
+                    ", p_off=" + Utils.byte2HexStringReverse(p_off) +
+                    ", p_vaddr=" + Utils.byte2HexStringReverse(p_vaddr) +
+                    ", p_paddr=" + Utils.byte2HexStringReverse(p_paddr) +
+                    ", p_filesz=" + Utils.byte2HexStringReverse(p_filesz) +
+                    ", p_memsz=" + Utils.byte2HexStringReverse(p_memsz) +
+                    ", p_flags=" + Utils.byte2HexStringReverse(p_flags) +
+                    ", p_align=" + Utils.byte2HexStringReverse(p_align) +
+                    '}';
+        }
     }
 
     //***********************************************

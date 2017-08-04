@@ -61,23 +61,18 @@ public class Utils {
     {
         int target =-1;
         int s0 = (int)data[0];
-        int s1 = (int)data[1];
+        int s1 = (int)data[1]; //
         int s2 = (int)data[2];
         int s3 = (int)data[3];
-//        int s0 = data[0];
-//        int s1 = data[1];
-//        int s2 = data[2];
-//        int s3 = data[3];
+//        11 0111 0000 0000  == 0011 0111 0000 0000  & 1111 1111 0000 0000 == 0011 0111 0000 0000
+        log("s1 "+Integer.toHexString(s1)+ "　，"+Integer.toBinaryString(s1));
+        log("s1 hex << 8  = "+Integer.toHexString(s1<<8) +" , binary "+ Integer.toBinaryString(s1) + "　，　＜＜８　"+Integer.toBinaryString(s1<<8) +" , oxff00 binary "+ Integer.toBinaryString(0xff00));
         log("s0="+s0 +" , s1="+s1+" ,s2="+s2+" ,s3="+s3);
         log("s0="+(s0 & 0xff) +" , s1="+((s1 << 8) &0xff00)+" ,s2="+((s2 << 24) >>> 8)+" ,s3="+((s3 << 24)));
         target = (s0 & 0xff) | ((s1 << 8) &0xff00)
                  | ((s2 << 24) >>> 8)
                  |((s3 << 24));
-        int targets = (data[0] & 0xff)
-                | ((data[1] << 8) & 0xff00)
-                | ((data[2] << 24) >>> 8)
-                | (data[3] << 24);
-log("targets: "+targets);
+
         return  target;
     }
 
