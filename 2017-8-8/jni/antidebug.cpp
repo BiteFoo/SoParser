@@ -62,12 +62,6 @@ void checkAndroidServer()  {
    LOGI("no find android server");
 }
 
-
-int call_ptrace()
-{
-    
-}
-
 //on 7.0 os  
 void readStatus()  {
     FILE *fd;
@@ -222,6 +216,7 @@ void* anti_ptrace(void* arg) {
 int  checkDebug(){
 	LOGI("call checkDebug  started " );
     if(pthread_create(&t_id, NULL, anti_ptrace, NULL) != 0){
+        LOGI("Oops !! debug is  failed ..... === ..");
         kill(getpid(), SIGKILL);
         return -1;
     }

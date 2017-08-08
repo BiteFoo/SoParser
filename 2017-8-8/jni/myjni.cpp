@@ -24,15 +24,27 @@
 
 // using namespace std;
 
+void function()//__attribute__((section(".hya")))
+{
+    LOGI("call function  .. ok ");
+}
+
 void test()__attribute__((constructor)){
-    LOGI("test construction ... ");
-   // DECRYPT_OK = checkDebug();
+    LOGI("test construction ... ============ >>>  ");
+   
   if(checkDebug() == 1)
   {
-    decrypt_section();
+  if( decrypt_section())
+  {
+     LOGE("call fuction  <<<***************>>> ");
+   //function();//call encrypted function
+  }
+
   }
 
 }
+
+
 
 //提供给java调用
 jstring native_show(JNIEnv *env, jobject object) {
@@ -63,17 +75,21 @@ static int registerNativeMethods(JNIEnv *env) //这里的env 指针是一个入�
     return JNI_TRUE;
 }
 //实现自己的JNI_OnLoad
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *resereved) __attribute((section(".hya"))) {
+// __attribute__((section(".hya")))
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *resereved) __attribute__((section(".hya"))){
     JNIEnv *env;
     jint result = -1;
     LOGI("call JNI_OnLoad DECRYPT_OK =  %d ",DECRYPT_OK);
+    // if(checkDebug() == -1) //  这里被第二次调用会崩掉，根据查到的函数提示 ，readStatus()和runIntify()函数出现了内存错误 ，
+    //修正方法，不在这里调用函数
+    //选择在init_array段进行调用反调试 ，
 
-    if(checkDebug() == -1)
-    {
-        LOGI("call JNI_OnLoad  checkDebug failed  ");
-        return result;
-    }
-
+    // {
+    //     LOGI("call JNI_OnLoad  checkDebug failed  ");
+    //     return result;
+    // }
+    LOGE("call fuction  *************** ");
+   function();//call encrypted function
     if (vm->GetEnv((void **) &env, JNI_VERSION_1_4) != JNI_OK) {
         LOGI("Oops !@ env->JNI_Onload is failed ");
         return result;

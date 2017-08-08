@@ -4,7 +4,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := native-lib
-LOCAL_SRC_FILES := myjni.cpp   antidebug.cpp
+LOCAL_SRC_FILES := myjni.cpp   antidebug.cpp mydecrypt.cpp
+
 
 # LOCAL_CFLAGS += -Wl,-init=my_init
 
