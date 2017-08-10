@@ -11,9 +11,10 @@ public class MyClass {
         if(soinfo != null)
         {
             Parser parser = new Parser(soinfo);
-            parser.parseElfHeader();
-            parser.parseElf32_phdr();
-            parser.parseSectionHeader();
+            parser.parseElfHeader();//elf header
+            parser.parseElf32_phdr();//e_phdr
+            parser.parseSectionHeader();// e_shdr
+            parser.addNewSection("C:\\Users\\John.Lu\\Desktop\\game");
         }
     }
 

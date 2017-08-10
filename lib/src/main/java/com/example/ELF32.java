@@ -10,9 +10,7 @@ import java.util.List;
 
 public class ELF32 {
 
-
-
-    public List<elf32_phdr> elf32_phdrs  = new ArrayList<>();
+        public List<elf32_phdr> elf32_phdrs  = new ArrayList<>();
     public List<elf32_shdr> elf32_shdrs = new ArrayList<>();
 
     /**
@@ -137,10 +135,26 @@ public class ELF32 {
         public byte[] sh_info = new byte[4];
         public byte[] sh_addralign = new byte[4];
         public byte[] sh_entsize = new byte[4];
+
+        @Override
+        public String toString() {
+            return "elf32_shdr{" +
+                    "sh_name=" + Utils.byte2HexStringReverse(sh_name) +
+                    ", sh_type=" + Utils.byte2HexStringReverse(sh_type) +
+                    ", sh_flags=" + Utils.byte2HexStringReverse(sh_flags) +
+                    ", sh_addr=" + Utils.byte2HexStringReverse(sh_addr) +
+                    ", sh_offset=" + Utils.byte2HexStringReverse(sh_offset) +
+                    ", sh_size=" + Utils.byte2HexStringReverse(sh_size) +
+                    ", sh_link=" + Utils.byte2HexStringReverse(sh_link) +
+                    ", sh_info=" + Utils.byte2HexStringReverse(sh_info) +
+                    ", sh_addralign=" + Utils.byte2HexStringReverse(sh_addralign) +
+                    ", sh_entsize=" + Utils.byte2HexStringReverse(sh_entsize) +
+                    '}';
+        }
     }
     //*************************************sh_type的值有如下*********************************
     public static final  int SH_NULL =0;
-    public static final  int SH_PROGBITS =1;
+    public static final  int SH_PROGBITS =1; //SHT_PROGBITS
     public static final  int SH_SYMTAB =2;
     public static final  int SH_STRTAB =3;
     public static final  int SH_RELA =4;

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -42,8 +43,68 @@ public class Utils {
         return  sb.toString();
     }
 
+    public static  void saveFile(String path,byte[] data)
+    {
+        File file = new File(path+File.separator+"newMain");
+        try {
+            if(!file.exists())
+            {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(data);
+            fileOutputStream.close();
+
+        }catch (FileNotFoundException e)
+        {
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static byte[] copyBytes(byte[] res, int start, int count){
+        if(res == null){
+            return null;
+        }
+        byte[] result = new byte[count];
+        for(int i=0;i<count;i++){
+            result[i] = res[start+i];
+        }
+        return result;
+    }
+
     /**
-     * 将byte[] 转成int 类型
+     * 对齐算法
+     *
+     * 返回一个 addr的align的整数倍
+     * */
+    public static  int align(int addr, int align)
+    {
+        if(align > addr)
+        {
+            return addr;
+        }
+        int offset  = addr % align;
+        return addr + (align - offset);
+    }
+
+    public static byte[] int2Byte(int num)
+    {
+        int tmp = num;
+        byte[] buff = new byte[4];//?? 4个字节
+        for(int i =0; i< 4; ++i)
+        {
+            buff[i] = new Integer(tmp &0xff).byteValue(); //将最低位保存在最低位
+            tmp  = tmp >> 8;//向右移动8位
+        }
+        return  buff;
+    }
+
+
+    /**
+     * 将byte[] 转成int 类型 4个字节
      * 针对的是 四个字节的数据类型
      *   elf32Word
      *   elf32Addr
@@ -65,10 +126,10 @@ public class Utils {
         int s2 = (int)data[2];
         int s3 = (int)data[3];
 //        11 0111 0000 0000  == 0011 0111 0000 0000  & 1111 1111 0000 0000 == 0011 0111 0000 0000
-        log("s1 "+Integer.toHexString(s1)+ "　，"+Integer.toBinaryString(s1));
-        log("s1 hex << 8  = "+Integer.toHexString(s1<<8) +" , binary "+ Integer.toBinaryString(s1) + "　，　＜＜８　"+Integer.toBinaryString(s1<<8) +" , oxff00 binary "+ Integer.toBinaryString(0xff00));
-        log("s0="+s0 +" , s1="+s1+" ,s2="+s2+" ,s3="+s3);
-        log("s0="+(s0 & 0xff) +" , s1="+((s1 << 8) &0xff00)+" ,s2="+((s2 << 24) >>> 8)+" ,s3="+((s3 << 24)));
+       // log("s1 "+Integer.toHexString(s1)+ "　，"+Integer.toBinaryString(s1));
+       // log("s1 hex << 8  = "+Integer.toHexString(s1<<8) +" , binary "+ Integer.toBinaryString(s1) + "　，　＜＜８　"+Integer.toBinaryString(s1<<8) +" , oxff00 binary "+ Integer.toBinaryString(0xff00));
+       // log("s0="+s0 +" , s1="+s1+" ,s2="+s2+" ,s3="+s3);
+       // log("s0="+(s0 & 0xff) +" , s1="+((s1 << 8) &0xff00)+" ,s2="+((s2 << 24) >>> 8)+" ,s3="+((s3 << 24)));
         target = (s0 & 0xff) | ((s1 << 8) &0xff00)
                  | ((s2 << 24) >>> 8)
                  |((s3 << 24));
@@ -87,11 +148,11 @@ public class Utils {
     {
         short target =-1;
         short s0 =(short)data[0];
-        log("s0: "+s0);
+      //  log("s0: "+s0);
         short s1 = (short) data[1];
-        log("s1: "+s1);
+       // log("s1: "+s1);
         target =(short)(s0 | s1);
-        log("相加数据:　"+(s0+s1));
+        //log("相加数据:　"+(s0+s1));
         return  target;
     }
 
@@ -129,7 +190,7 @@ public class Utils {
         if(!so.exists() || !so.isFile())
         {
             log("文件不存在 ，file is not found ");
-            return soinfo;
+           throw  new UnknownError(path+ " 文件不存在");
         }
         try {
              fileInputStream = new FileInputStream(path);
@@ -167,6 +228,69 @@ public class Utils {
             }
         }
         return soinfo;
+    }
+
+
+    /**
+     * long转化成byte
+     * @param number
+     * @return
+     */
+    public static byte[] long2ByteAry(long number) {
+        long temp = number;
+        byte[] b = new byte[8];
+        for (int i = 0; i < b.length; i++) {
+            b[i] = new Long(temp & 0xff).byteValue();// 将最低位保存在最低位
+            temp = temp >> 8; // 向右移8位
+        }
+        return b;
+    }
+
+
+    /**
+     * short转化成byte
+     * @param number
+     * @return
+     */
+    public static byte[] short2Byte(short number) {
+        int temp = number;
+        byte[] b = new byte[2];
+        for (int i = 0; i < b.length; i++) {
+            b[i] = new Integer(temp & 0xff).byteValue();//将最低位保存在最低位
+            temp = temp >> 8; // 向右移8位
+        }
+        return b;
+    }
+
+    /**
+     * 替换rep_index位置的byte[]
+     * @param src
+     * @param rep_index
+     * @param copyByte
+     * @return
+     */
+    public static byte[] replaceByteAry(byte[] src, int rep_index, byte[] copyByte){
+        for(int i=rep_index;i<rep_index+copyByte.length;i++){
+            src[i] = copyByte[i-rep_index];
+        }
+        return src;
+    }
+    /**
+     * 高地位互换
+     */
+    public static byte[] reverseBytes(byte[] bytes){
+        if(bytes == null || (bytes.length % 2) != 0){
+            return bytes;
+        }
+        int i = 0;
+        int offset = bytes.length/2;
+        while(i < (bytes.length/2)){
+            byte tmp = bytes[i];
+            bytes[i] = bytes[offset+i];
+            bytes[offset+i] = tmp;
+            i++;
+        }
+        return bytes;
     }
 
     public static  void log(String msg)
